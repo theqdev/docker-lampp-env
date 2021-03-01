@@ -1,0 +1,36 @@
+version: "3.7"
+services:
+  web-server:
+    build:
+      dockerfile: php.Dockerfile
+      context: .
+    container_name: web-server
+    restart: always
+    volumes:
+      - "./html/:/var/www/html/"
+    ports:
+      - "8080:80"
+
+  mysql-server:
+    image: mariadb:10.5.9
+    container_name: mysql-server
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+    volumes:
+      - mysql:/var/lib/mysql
+      - "./mysql/:/home/mysql"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.0.1
+    container_name: pma-server
+    restart: always
+    environment:
+      PMA_HOST: mysql-server
+      PMA_USER: root
+      PMA_PASSWORD: secret
+    ports:
+      - "5000:80"
+      
+volumes:
+  mysql:
