@@ -10,6 +10,8 @@ services:
       - "./html/:/var/www/html/"
     ports:
       - "8080:80"
+      - "9501:9501"
+      - "1215:1215"
 
   mysql-server:
     image: mariadb:10.5.9

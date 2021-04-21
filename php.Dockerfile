@@ -12,7 +12,12 @@ RUN yum install epel-release yum-utils -y \
 RUN yum-config-manager --enable remi-php74
 
 # Install PHP
-RUN yum install php php-common php-bcmath php-opcache php-mcrypt php-cli php-gd php-curl php-mysql php-pear php-soap php-xml php-xmlrpc -y
+RUN yum install php php-common php-bcmath php-opcache php-mcrypt php-cli php-gd php-curl php-mysql php-pear php-soap php-xml php-xmlrpc php-devel -y
+
+RUN yes '' | pecl install -f swoole
+RUN echo 'extension=swoole.so' >> /etc/php.ini
+
+RUN yum install -y composer
 
 # Update Apache Configuration
 RUN sed -E -i -e '/<Directory "\/var\/www\/html">/,/<\/Directory>/s/AllowOverride None/AllowOverride All/' /etc/httpd/conf/httpd.conf
@@ -26,6 +31,8 @@ RUN chmod a+x /usr/bin/systemctl
 RUN yum -y install nano
 
 EXPOSE 80
+EXPOSE 9501
+EXPOSE 1215
 
 # Start Apache
 CMD ["/usr/sbin/httpd","-D","FOREGROUND"]
